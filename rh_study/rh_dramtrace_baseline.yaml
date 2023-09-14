@@ -1,0 +1,40 @@
+Frontend:
+  impl: LoadStoreTrace
+  path: ./random_example.trace
+  clock_ratio: 1
+
+  Translation:
+    impl: NoTranslation
+    max_addr: 17179869184
+
+
+MemorySystem:
+  impl: GenericDRAM
+  clock_ratio: 1
+
+  DRAM:
+    impl: DDR4-VRR
+    org:
+      preset: DDR4_8Gb_x8
+      channel: 1
+      rank: 2
+    timing:
+      preset: DDR4_2400R
+
+  Controller:
+    impl: Generic
+    Scheduler:
+      impl: FRFCFS
+    RefreshManager:
+      impl: AllBank
+    plugins:
+      - ControllerPlugin:
+          impl: CommandCounter
+          path: ./test.cmds1
+          commands_to_count:
+            - ACT
+            - PRE
+            - VRR
+
+  AddrMapper:
+    impl: RoBaRaCoCh_with_rit
