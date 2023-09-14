@@ -1,5 +1,6 @@
 Frontend:
   impl: SimpleO3
+  clock_ratio: 8
   llc_capacity_per_core: 2MB
   llc_num_mshr_per_core: 16
   num_expected_insts: 100000000
@@ -9,10 +10,11 @@ Frontend:
   Translation:
     impl: RandomTranslation
     max_addr: 17179869184
-              
+
 
 MemorySystem:
   impl: GenericDRAM
+  clock_ratio: 3
 
   DRAM:
     impl: DDR4-VRR

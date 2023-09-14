@@ -16,6 +16,9 @@ output_path = "./results_singlecore"
 trace_path = "./cputraces"
 trace_combination_filename = "multicore_traces.txt"
 
+trace_names = ["example"]
+
+'''
 trace_names = []
 with open(trace_combination_filename, "r") as trace_combination_file:
     for line in trace_combination_file:
@@ -26,6 +29,7 @@ with open(trace_combination_filename, "r") as trace_combination_file:
         trace_names += trace_list
 
 trace_names = list(set(trace_names))
+'''
 
 for trace_name in trace_names:
     for mitigation in ["PARA", "Hydra", "TWiCe-Ideal", "Graphene", "OracleRH", "RRS", "NoDefence"]:
@@ -42,7 +46,8 @@ for trace_name in trace_names:
             result_file = open(result_filename, "w")
             config_file = open(config_filename, "w")
             
-            config['Frontend']['traces'] = [trace_path + "/" + trace_name]
+            #config['Frontend']['traces'] = [trace_path + "/" + trace_name]
+            config['Frontend']['traces'] = ["./example_inst.trace"]
             config['MemorySystem']['Controller']['plugins'][0]['ControllerPlugin']['path'] = cmd_count_filename
             # config['MemorySystem']['Controller']['plugins'].append({'ControllerPlugin' : {'impl': 'TraceRecorder', 'path': dram_trace_filename}})
             if(mitigation == "PARA"):
@@ -65,8 +70,9 @@ for trace_name in trace_names:
                 config['MemorySystem']['Controller']['plugins'].append({'ControllerPlugin' : {'impl': 'RRS', 'num_hrt_entries': num_hrt_entries, 'num_rit_entries': num_rit_entries, 'rss_threshold': rss_threshold, 'reset_period_ns': reset_period_ns}})
             elif(mitigation == "NoDefense"):
                 pass
-            cmd = "srun ./ramulator -c '" + str(config) + "' > " + result_filename + " 2>&1 &"           
-            
+            #cmd = "srun ./ramulator -c '" + str(config) + "' > " + result_filename + " 2>&1 &"           
+            cmd = "./../ramulator2 -c '" + str(config) + "' > " + result_filename + " 2>&1 &"
+
             yaml.dump(config, config_file, default_flow_style=False)
             config_file.close()
             result_file.write(cmd + "\n")
